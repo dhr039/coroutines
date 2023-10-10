@@ -3,6 +3,8 @@ package com.lukaslechner.coroutineusecasesonandroid.usecases.coroutines.usecase3
 import androidx.lifecycle.viewModelScope
 import com.lukaslechner.coroutineusecasesonandroid.base.BaseViewModel
 import com.lukaslechner.coroutineusecasesonandroid.mock.MockApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class PerformNetworkRequestsConcurrentlyViewModel(
@@ -27,6 +29,33 @@ class PerformNetworkRequestsConcurrentlyViewModel(
     }
 
     fun performNetworkRequestsConcurrently() {
+        uiState.value = UiState.Loading
+        val oreoFeaturesDeferred = viewModelScope.async {
+            mockApi.getAndroidVersionFeatures(27)
+        }
+
+        val pieFeaturesDeferred = viewModelScope.async {
+            mockApi.getAndroidVersionFeatures(28)
+        }
+
+        val android10FeaturesDeferred = viewModelScope.async {
+            mockApi.getAndroidVersionFeatures(29)
+        }
+
+        viewModelScope.launch {
+            try {
+                /*val oreoFeatures = oreoFeaturesDeferred.await()
+                val pieFeatures = pieFeaturesDeferred.await()
+                val android10Features = android10FeaturesDeferred.await()
+                val versionFeatures = listOf(oreoFeatures, pieFeatures, android10Features)*/
+
+                val versionFeatures = awaitAll(oreoFeaturesDeferred,pieFeaturesDeferred, android10FeaturesDeferred)
+
+                uiState.value = UiState.Success(versionFeatures)
+            } catch (e: Exception) {
+                uiState.value = UiState.Error(e.toString())
+            }
+        }
 
     }
 }
