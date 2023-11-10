@@ -1,10 +1,13 @@
 package com.lukaslechner.coroutineusecasesonandroid.playground.cancellation
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.yield
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -18,11 +21,27 @@ import kotlinx.coroutines.yield
  * */
 fun main() = runBlocking {
     val job = launch(Dispatchers.Default) {
-        repeat(10) {index ->
-//            ensureActive()
-            yield()
-            println("operation number $index")
-            Thread.sleep(100)
+//        repeat(10) {index ->
+////            ensureActive()
+//            yield()
+//            println("operation number $index")
+//            Thread.sleep(100)
+//        }
+
+        repeat(10) { index ->
+            if (isActive) {
+                println("operation number $index")
+                Thread.sleep(100)
+            } else {
+                /* if we want to call a suspend funciton in our cleanup, the rest of the code will not
+                * execute, since the suspend function throws itself a CancellationException.
+                * */
+                withContext(NonCancellable) {
+                    delay(100)
+                    println("cleaning up, closing db connection...")
+                    throw CancellationException()
+                }
+            }
         }
     }
 
