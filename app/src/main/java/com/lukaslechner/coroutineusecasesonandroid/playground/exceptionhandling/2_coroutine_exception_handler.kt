@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 
 
 /**
- * You should install an exception handler only in the scope or in a TOP level coroutine,
- * in a nested(child) coroutine it will not have any effect.
+ * You should install an exception handler only in the scope or in a TOP level coroutine.
+ * In a nested(child) coroutine it will not have any effect.
  * CancellationException will also not get handled by the coroutine exception handler.
  * */
 fun main() {
