@@ -13,7 +13,7 @@ import java.lang.RuntimeException
  * if coroutines are closely related and one doesn't make sense without the other. Then to avoid
  * wasting resources we could just use an exception handler for both.
  *
- * When you catch inside the coroutine remember that the cancellation is not propagated.
+ * When you catch inside the coroutine remember that the cancellation is not propagated unless you re-throw.
  * */
 fun main() {
 
