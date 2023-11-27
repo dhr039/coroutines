@@ -30,8 +30,20 @@ class ExceptionHandlingViewModel(
         }
     }
 
+    /**
+     * if we want to recover from the error, for example do a retry, then we should use try/catch
+     * otherwise it is fine to use an CoroutineExceptionHandler
+     * */
     fun handleWithCoroutineExceptionHandler() {
+        uiState.value = UiState.Loading
 
+        val exceptionHandler = CoroutineExceptionHandler {coroutineContext, throwable ->
+            uiState.value = UiState.Error("network request failed")
+        }
+
+        viewModelScope.launch(exceptionHandler) {
+            api.getAndroidVersionFeatures(27)
+        }
     }
 
     fun showResultsEvenIfChildCoroutineFails() {
