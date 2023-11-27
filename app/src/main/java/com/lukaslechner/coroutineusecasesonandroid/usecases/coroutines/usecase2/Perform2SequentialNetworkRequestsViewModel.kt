@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 /**
  * 1. written in pure imperative fashion and is executed sequentially
  * 2. implementation is much shorter
- * 3. you don't have to think about freeing resources, since viewModelScope
+ * 3. you don't have to think about freeing resources, since there is a viewModelScope
  * 4. don't need to manually specify which code should run on which thread, since Retrofit calls
  * are main thread safe (libs are usually implemented this way) and Retrofit itself takes care
  * to execute in a background thread
@@ -18,8 +18,6 @@ class Perform2SequentialNetworkRequestsViewModel(
 ) : BaseViewModel<UiState>() {
 
     fun perform2SequentialNetworkRequest() {
-        // TODO: Exercise 1
-        // switch to branch "coroutine_course_full" to see solution
 
         uiState.value = UiState.Loading
 
