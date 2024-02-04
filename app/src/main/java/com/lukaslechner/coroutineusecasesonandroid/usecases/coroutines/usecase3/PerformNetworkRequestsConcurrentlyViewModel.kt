@@ -7,6 +7,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
+/**
+ * 05-003, 05-004, 05-005
+ * could run the code concurrently also by still using .launch,
+ * but then we would have shared mutable state, which should be avoided.
+ * */
 class PerformNetworkRequestsConcurrentlyViewModel(
     private val mockApi: MockApi = mockApi()
 ) : BaseViewModel<UiState>() {
